@@ -55,7 +55,18 @@ parser.add_argument("--log-freq-time", type=int, default=10)
 parser.add_argument("--num-workers", type=int, default=10)
 
 args = parser.parse_args()
+# --- asegurar rutas y directorios antes de escribir archivos ---
+args.dataset_root = Path(args.dataset_root).expanduser()
+args.exp_dir = Path(args.exp_dir).expanduser()
+args.root_log_dir = Path(args.root_log_dir).expanduser()
 
+args.exp_dir.mkdir(parents=True, exist_ok=True)
+args.root_log_dir.mkdir(parents=True, exist_ok=True)
+
+# nombre de la carpeta de logs (igual al nombre de exp_dir)
+exp_name = args.exp_dir.name if str(args.exp_dir) else "exp"
+logdir = args.root_log_dir / exp_name
+logdir.mkdir(parents=True, exist_ok=True)
 
 class Model(nn.Module):
     def __init__(self, args):
@@ -112,11 +123,12 @@ class Dataset3DIEBench(Dataset):
     def __getitem__(self, i):
         # Latent vector creation
         views = self.rng.choice(50,2, replace=False)
-        img_1 = self.get_img(self.dataset_root + self.samples[i]+ f"/image_{views[0]}.jpg")
-        img_2 = self.get_img(self.dataset_root + self.samples[i]+ f"/image_{views[1]}.jpg")         
+        folder = f"{str(self.dataset_root)}/{str(self.samples[i])}"
+        img_1 = self.get_img(f"{folder}/image_{views[0]}.jpg")
+        img_2 = self.get_img(f"{folder}/image_{views[1]}.jpg")         
     
-        latent_1 = np.load(self.dataset_root + self.samples[i]+ f"/latent_{views[0]}.npy").astype(np.float32)[[3,6]]
-        latent_2 = np.load(self.dataset_root + self.samples[i]+ f"/latent_{views[1]}.npy").astype(np.float32)[[3,6]]
+        latent_1 = np.load(f"{folder}/latent_{views[0]}.npy").astype(np.float32)[[3,6]]
+        latent_2 = np.load(f"{folder}/latent_{views[1]}.npy").astype(np.float32)[[3,6]]
         latent_1_to_2 = latent_2 - latent_1
 
         return img_1, img_2, torch.FloatTensor(latent_1_to_2)

@@ -15,8 +15,6 @@
 #SBATCH --cpus-per-task=8           # numero de cpus (threads) por trabajo (proceso)
 #SBATCH --mem=90G
 # 1. Cargar pyenv
-
-a
 # 2. Activar entorno pyenv
 source /home/araymond/storage/torch/bin/activate
 cd /home/araymond/storage/investigacion/SIE

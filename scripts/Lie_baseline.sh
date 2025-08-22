@@ -20,7 +20,7 @@
 source /home/araymond/storage/torch/bin/activate
 cd /home/araymond/storage/investigacion/SIE
 
-python main.py --experience SIE --exp-dir results/baseline --root-log-dir results/logs/ --epochs 2000 --arch resnet18 --equi 256 --batch-size 1024 --base-lr 1e-3 --dataset-root /home/araymond/storage/investigacion/datasets/3DIEBench --images-file ./data/train_images.npy --labels-file ./data/train_labels.npy --sim-coeff 10 --std-coeff 10 --cov-coeff 1 --mlp 2048-2048-2048 --equi-factor 0.45 --hypernetwork linear
+python main.py --predictor_type lie --experience SIE --exp-dir results/lie --root-log-dir results/logs/ --epochs 2000 --arch resnet18 --equi 256 --batch-size 1024 --base-lr 1e-3 --dataset-root /home/araymond/storage/investigacion/datasets/3DIEBench --images-file ./data/train_images.npy --labels-file ./data/train_labels.npy --sim-coeff 10 --std-coeff 10 --cov-coeff 1 --mlp 2048-2048-2048 --equi-factor 0.45 --hypernetwork linear
 
 wait
 

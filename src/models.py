@@ -319,6 +319,8 @@ class SIE(nn.Module):
             self.predictor = hypernetwork.ParametrizedNet(self.equi_emb_size,4,self.args)
         elif args.predictor_type == "mlp":
             self.predictor = predictors.MLPPredictor(repr_dim=self.equi_emb_size,n_layers=args.tf_num_layers)
+        elif args.predictor_type == "lie":
+            self.predictor = hypernetwork.LieNet(self.equi_emb_size,4,self.args)
         else:
             self.predictor = hypernetwork.ParametrizedNet(self.equi_emb_size,4,self.args)
         print("Invariant projector dims: ", mlp_inv)

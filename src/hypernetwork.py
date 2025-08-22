@@ -75,3 +75,36 @@ class ParametrizedNet(nn.Module):
                 out = self.activation(out)
         
         return out.squeeze()
+
+class LieNet(nn.Module):
+    def __init__(self, equivariant_size: int, latent_size: int, args):
+        super(LieNet, self).__init__()
+        self.D = equivariant_size
+        self.n_comps = args.n_comps
+        self.latent_size = latent_size
+        self.args = args
+
+        # Parámetros de los generadores: aprendidos directamente como un tensor
+        self.generators = nn.Parameter(torch.randn(n_comps, self.D, self.D) * 0.01)
+
+        self.hypernet = HyperNet(latent_size, n_comps, args)
+    
+    def forward(self, x: torch.Tensor, z: torch.Tensor):
+        """
+        x: shape (bs, 1, D)
+        z: shape (bs, latent_size)
+        """
+
+        bs = x.size(0)
+        coefs = self.hypernet(z)  # (bs, n_comps)
+
+        # Combinación lineal: (bs, n_comps) x (n_comps, D, D) → (bs, D, D)
+        A = torch.einsum('bi,ijd->bjd', coefs, self.generators)
+
+        # Exponencial matricial para cada muestra
+        A_exp = torch.matrix_exp(A)  # (bs, D, D)
+
+        # Aplicar transformación al input x
+        x = x.transpose(1, 2)  # (bs, D, 1)
+        out = torch.bmm(A_exp, x)  # (bs, D, 1)
+        return out.squeeze()   # (bs, D)

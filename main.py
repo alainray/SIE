@@ -43,13 +43,13 @@ parser.add_argument("--pred-size-in",type=int, default=10)
 parser.add_argument("--predictor-relu",  action="store_true")
 
 # Predictor
-parser.add_argument("--predictor-type",type=str,choices=["hypernetwork","mlp"],default="hypernetwork")
+parser.add_argument("--predictor-type",type=str,choices=["hypernetwork","mlp","lie"],default="hypernetwork")
 parser.add_argument("--bias-pred", action="store_true")
 parser.add_argument("--bias-hypernet", action="store_true")
 parser.add_argument("--simclr-temp",type=float,default=0.1)
 parser.add_argument("--ec-weight",type=float,default=1)
 parser.add_argument("--tf-num-layers",type=int,default=1)
-
+parser.add_argument("--n_comps", type=int, default=4)
 
 
 # Optim
